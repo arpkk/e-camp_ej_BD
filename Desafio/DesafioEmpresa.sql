@@ -1,0 +1,135 @@
+CREATE TABLE proveedores (
+    id NUMBER NOT NULL PRIMARY KEY,
+    nombre VARCHAR2(50),
+    nombrecontacto VARCHAR2(40),
+    direccion VARCHAR2(40),
+    region VARCHAR2(20),
+    ciudad VARCHAR2(20),
+    telefono VARCHAR2(10)
+);
+
+CREATE TABLE empleados (
+    id NUMBER NOT NULL PRIMARY KEY,
+    nombre VARCHAR2(20),
+    apellido VARCHAR2(20),
+    fechanacimiento DATE,
+    direccion VARCHAR2(40),
+    region VARCHAR2(20),
+    ciudad VARCHAR2(20),
+    telefono VARCHAR2(10),
+    cargo VARCHAR2(20),
+    id_proveedores NUMBER,
+    FOREIGN KEY (id_proveedores) REFERENCES proveedores(id)
+);
+
+CREATE TABLE productos (
+    id NUMBER NOT NULL PRIMARY KEY,
+    nombre VARCHAR2(50),
+    precio NUMBER,
+    stock NUMBER,
+    descontinuado VARCHAR2(2),
+    id_proveedores NUMBER,
+    FOREIGN KEY (id_proveedores) REFERENCES proveedores(id)
+);
+
+CREATE TABLE categoria (
+    id NUMBER NOT NULL PRIMARY KEY,
+    nombre VARCHAR2(50)
+);
+
+CREATE TABLE tiene (
+    id_productos NUMBER NOT NULL,
+    id_categoria NUMBER NOT NULL,
+    PRIMARY KEY (id_productos, id_categoria),
+    FOREIGN KEY (id_productos) REFERENCES productos(id),
+    FOREIGN KEY (id_categoria) REFERENCES categoria(id)
+);
+
+
+CREATE TABLE clientes (
+    id NUMBER NOT NULL PRIMARY KEY,
+    nombre VARCHAR2(50),
+    nombrecontacto VARCHAR2(40),
+    email VARCHAR2(40),
+    direccion VARCHAR2(40),
+    region VARCHAR2(20),
+    ciudad VARCHAR2(20),
+    pais VARCHAR2(20),
+    codigopostal NUMBER,
+    telefono VARCHAR2(10)
+);
+
+CREATE TABLE despachadores (
+    id NUMBER NOT NULL PRIMARY KEY,
+    nombre VARCHAR2(50),
+    telefono VARCHAR2(10)
+);
+
+CREATE TABLE ordenes (
+    id NUMBER NOT NULL PRIMARY KEY,
+    fecharequerimiento DATE,
+    fechaenvio DATE,
+    direccion VARCHAR2(40),
+    region VARCHAR2(20),
+    ciudad VARCHAR2(20),
+    telefono VARCHAR2(10),
+    valor NUMBER,
+    cantidad NUMBER,
+    descuento NUMBER,
+    id_proveedor NUMBER NOT NULL,
+    id_cliente NUMBER NOT NULL,
+    id_despachador NUMBER NOT NULL,
+    FOREIGN KEY (id_proveedor) REFERENCES proveedores(id),
+    FOREIGN KEY (id_cliente) REFERENCES clientes(id),
+    FOREIGN KEY (id_despachador) REFERENCES despachadores(id)
+);
+
+CREATE TABLE esta (
+    id_productos NUMBER NOT NULL,
+    id_ordenes NUMBER NOT NULL,
+    PRIMARY KEY (id_productos, id_ordenes),
+    FOREIGN KEY (id_productos) REFERENCES productos(id),
+    FOREIGN KEY (id_ordenes) REFERENCES ordenes(id)
+);
+
+INSERT INTO PROVEEDORES (ID, NOMBRE, NOMBRECONTACTO, DIRECCION, REGION, CIUDAD, TELEFONO) VALUES ('1', 'Falabella', 'Francisco', 'arroz 2024', 'Metropolitana', 'Santiago', '12345324');
+INSERT INTO PROVEEDORES (ID, NOMBRE, NOMBRECONTACTO, DIRECCION, REGION, CIUDAD, TELEFONO) VALUES ('2', 'Ripley', 'Pamela', 'casa 302', 'Metropolitana', 'Maipu', '12342423');
+INSERT INTO PROVEEDORES (ID, NOMBRE, NOMBRECONTACTO) VALUES ('3','Sony', 'Raul');
+INSERT INTO PROVEEDORES (ID, NOMBRE, NOMBRECONTACTO) VALUES ('4','Microsoft', 'Paula');
+INSERT INTO PROVEEDORES (ID, NOMBRE, NOMBRECONTACTO) VALUES ('5', 'Bata', 'Sara');
+
+INSERT INTO DESPACHADORES (ID, NOMBRE, TELEFONO) VALUES ('1', 'Chileexpress', '3214414');
+INSERT INTO DESPACHADORES (ID, NOMBRE, TELEFONO) VALUES ('2', 'CorreosChile', '112144135');
+INSERT INTO DESPACHADORES (ID, NOMBRE, TELEFONO) VALUES ('3', 'Starken', '21432414');
+INSERT INTO DESPACHADORES (ID, NOMBRE, TELEFONO) VALUES ('4', 'DespachadorX', '1244141');
+INSERT INTO DESPACHADORES (ID, NOMBRE, TELEFONO) VALUES ('5', 'PerroDespachador', '5352353252');
+
+INSERT INTO CLIENTES (ID, NOMBRE, NOMBRECONTACTO, EMAIL, DIRECCION, REGION, CIUDAD, PAIS, CODIGOPOSTAL, TELEFONO) VALUES ('1', 'Tienda1', 'Juan', 'juan@email.com', 'casa', 'matropolitana', 'independencia', 'chile', '2343', '645645');
+INSERT INTO CLIENTES (ID, NOMBRE, NOMBRECONTACTO, EMAIL, CIUDAD) VALUES ('2', 'Tienda2', 'Paula', 'paula@email.com', 'maipu');
+INSERT INTO CLIENTES (ID, NOMBRE, NOMBRECONTACTO, EMAIL, CIUDAD) VALUES ('3', 'Tienda3', 'Rocio', 'rocio@email.com', 'puente alto');
+INSERT INTO CLIENTES (ID, NOMBRE, NOMBRECONTACTO, EMAIL, CIUDAD) VALUES ('4', 'Tienda4', 'Carlos', 'carlos@email.com', 'macul');
+INSERT INTO CLIENTES (ID, NOMBRE, NOMBRECONTACTO, EMAIL, CIUDAD) VALUES ('5', 'Tienda5', 'Matias', 'matias@email.com', 'providencia');
+
+INSERT INTO ORDENES (ID, FECHAREQUERIMIENTO, FECHAENVIO, VALOR, CANTIDAD, ID_PROVEEDOR, ID_CLIENTE, ID_DESPACHADOR) VALUES ('1', TO_DATE('2022-05-02 20:07:17', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2022-05-05 20:07:27', 'YYYY-MM-DD HH24:MI:SS'), '5000', '4', '1', '2', '1');
+INSERT INTO ORDENES (ID, FECHAREQUERIMIENTO, FECHAENVIO, VALOR, CANTIDAD, ID_PROVEEDOR, ID_CLIENTE, ID_DESPACHADOR) VALUES ('2', TO_DATE('2022-04-20 20:09:28', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2022-04-25 20:09:34', 'YYYY-MM-DD HH24:MI:SS'), '10000', '1', '2', '4', '3');
+INSERT INTO ORDENES (ID, FECHAREQUERIMIENTO, FECHAENVIO, VALOR, CANTIDAD, ID_PROVEEDOR, ID_CLIENTE, ID_DESPACHADOR) VALUES ('3', TO_DATE('2022-05-01 20:10:12', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2022-05-03 20:10:17', 'YYYY-MM-DD HH24:MI:SS'), '2000', '1', '1', '4', '2');
+INSERT INTO ORDENES (ID, FECHAREQUERIMIENTO, FECHAENVIO, VALOR, CANTIDAD, ID_PROVEEDOR, ID_CLIENTE, ID_DESPACHADOR) VALUES ('4', TO_DATE('2022-05-02 20:12:41', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2022-05-05 20:12:46', 'YYYY-MM-DD HH24:MI:SS'), '50000', '10', '3', '1', '1');
+INSERT INTO ORDENES (ID, FECHAREQUERIMIENTO, FECHAENVIO, VALOR, CANTIDAD, ID_PROVEEDOR, ID_CLIENTE, ID_DESPACHADOR) VALUES ('5', TO_DATE('2022-04-04 20:16:16', 'YYYY-MM-DD HH24:MI:SS'), TO_DATE('2022-04-07 20:16:21', 'YYYY-MM-DD HH24:MI:SS'), '1000', '1', '5', '5', '5');
+
+INSERT INTO PRODUCTOS (ID, NOMBRE, PRECIO, STOCK, ID_PROVEEDORES) VALUES ('1', 'Chocolate', '1250', '20', '1');
+INSERT INTO PRODUCTOS (ID, NOMBRE, PRECIO, STOCK, ID_PROVEEDORES) VALUES ('2', 'Polera', '1000', '50', '5');
+INSERT INTO PRODUCTOS (ID, NOMBRE, PRECIO, STOCK, ID_PROVEEDORES) VALUES ('3', 'Pantalon', '5000', '30', '3');
+INSERT INTO PRODUCTOS (ID, NOMBRE, PRECIO, STOCK, ID_PROVEEDORES) VALUES ('4', 'Falda', '2000','30', '1');
+INSERT INTO PRODUCTOS (ID, NOMBRE, PRECIO, STOCK, ID_PROVEEDORES) VALUES ('5', 'Chaqueta', '10000','30', '2');
+
+INSERT INTO ESTA (ID_PRODUCTOS, ID_ORDENES) VALUES ('1', '1');
+INSERT INTO ESTA (ID_PRODUCTOS, ID_ORDENES) VALUES ('2', '5');
+INSERT INTO ESTA (ID_PRODUCTOS, ID_ORDENES) VALUES ('3', '4');
+INSERT INTO ESTA (ID_PRODUCTOS, ID_ORDENES) VALUES ('4', '3');
+INSERT INTO ESTA (ID_PRODUCTOS, ID_ORDENES) VALUES ('5', '2');
+
+SELECT ordenes.cantidad, clientes.nombre, clientes.ciudad FROM clientes INNER JOIN ordenes ON clientes.id=ordenes.id_cliente WHERE ordenes.cantidad=(SELECT max(cantidad) FROM ordenes);
+
+SELECT nombre FROM despachadores INNER JOIN ordenes ON despachadores.id=ordenes.id_despachador WHERE ordenes.cantidad=(SELECT max(cantidad) FROM ordenes);
+
+
